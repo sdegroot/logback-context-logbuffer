@@ -6,16 +6,16 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
  * This interface needs to be implemented by the appender wrappers.
  * The method of this appender 'appendDirectly' basically talks directly to the underlying appender.
  * <p>
- * Use this class in conjunction with @{link BufferedContextualAppender}
+ * Use this class in conjunction with {@link BufferedAppenderWrapper}
  *
- * @see @{link WrappedConsoleAppender} for an example on how to wrap another appender.
+ * @see com.github.sdegroot.logback.logbuffer.wrappers.WrappedConsoleAppender for an example on how to wrap another appender.
  */
 public interface BufferedAppenderWrapper {
     void appendDirectly(ILoggingEvent event);
 
     /**
      * The stop method is called by Joran from Logback.
-     * This method must be call @{link BufferedContextualAppender.clearBuffer} to avoid memory leaks.
+     * This method must call {@link BufferedContextualAppender#cleanBuffer()} to avoid memory leaks.
      * <p>
      * Note that this method doesn't necessarily have to be in this interface, but it makes it very explicit.
      */

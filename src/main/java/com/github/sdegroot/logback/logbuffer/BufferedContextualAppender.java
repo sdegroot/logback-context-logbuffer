@@ -3,21 +3,21 @@ package com.github.sdegroot.logback.logbuffer;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.LogbackException;
+import com.github.sdegroot.logback.logbuffer.wrappers.WrappedConsoleAppender;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 
 /**
  * This class contains the actual logic for buffering ILoggingEvents for certain appenders.
- * Use this class in conjunction with @{link BufferedAppenderWrapper}
+ * Use this class in conjunction with {@link BufferedAppenderWrapper}
  * <p>
  * Please make sure that you never log something in this class using regular loggers!
  * This will cause a stackoverflow since it will most likely be a recursive method.
  * <p>
- * <p>
  * TODO: improve performance around thread-safety
  *
- * @see @{link WrappedConsoleAppender} for an example on how to wrap another appender.
+ * @see WrappedConsoleAppender for an example on how to wrap another appender.
  */
 public class BufferedContextualAppender {
     public static final int DEFAULT_BUFFER_SIZE = 50;
@@ -89,6 +89,7 @@ public class BufferedContextualAppender {
      * This method must be called from your wrapper in the doAppend method.
      * It will buffer your event or write it directly depending on the configuration.
      *
+     * @param event The logging event
      * @throws LogbackException rethrows exceptions thrown by the actual wrapper
      */
     public void doAppend(ILoggingEvent event) throws LogbackException {
