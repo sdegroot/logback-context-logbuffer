@@ -34,5 +34,9 @@ public interface BufferedAppenderWrapper {
 
     void setFlushBufferFrom(String level);
 
-    void setBufferSize(Integer size);
+    void setBufferSize(String size);
+
+    void setLogMessagesAfterFlush(String enabled);
+
+    void setBufferEnabled(String enabled);
 }

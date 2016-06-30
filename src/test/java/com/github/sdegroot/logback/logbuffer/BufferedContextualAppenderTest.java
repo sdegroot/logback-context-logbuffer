@@ -116,7 +116,7 @@ public class BufferedContextualAppenderTest {
         bufferedContextualAppender.setBufferUntil(Level.INFO);
         bufferedContextualAppender.setFlushBufferFrom(Level.WARN);
         bufferedContextualAppender.setDropBelowBufferFrom(true);
-        bufferedContextualAppender.setLogMessageAfterFlush(false);
+        bufferedContextualAppender.setLogMessagesAfterFlush(false);
 
 
         bufferedContextualAppender.doAppend(logEvent(Level.DEBUG));
@@ -133,7 +133,7 @@ public class BufferedContextualAppenderTest {
         bufferedContextualAppender.setBufferUntil(Level.INFO);
         bufferedContextualAppender.setFlushBufferFrom(Level.WARN);
         bufferedContextualAppender.setDropBelowBufferFrom(true);
-        bufferedContextualAppender.setLogMessageAfterFlush(true);
+        bufferedContextualAppender.setLogMessagesAfterFlush(true);
 
 
         bufferedContextualAppender.doAppend(logEvent(Level.DEBUG));
@@ -145,22 +145,22 @@ public class BufferedContextualAppenderTest {
     }
 
     @Test
-    public void shouldBufferAgainAfter50directlySendMessagse() {
+    public void shouldBufferAgainAfter5directlySendMessagse() {
         bufferedContextualAppender.setBufferFrom(Level.DEBUG);
         bufferedContextualAppender.setBufferUntil(Level.INFO);
         bufferedContextualAppender.setFlushBufferFrom(Level.WARN);
         bufferedContextualAppender.setDropBelowBufferFrom(true);
-        bufferedContextualAppender.setLogMessageAfterFlush(true);
+        bufferedContextualAppender.setLogMessagesAfterFlush(true);
 
 
         bufferedContextualAppender.doAppend(logEvent(Level.DEBUG));
         bufferedContextualAppender.doAppend(logEvent(Level.ERROR));
 
-        for (int i = 0; i < 54; i++) {
+        for (int i = 0; i < 6; i++) {
             bufferedContextualAppender.doAppend(logEvent(Level.DEBUG));
         }
 
-        verify(stubAppender, times(51)).appendDirectly(logEvent(Level.DEBUG));
+        verify(stubAppender, times(7)).appendDirectly(logEvent(Level.DEBUG));
         verify(stubAppender, times(1)).appendDirectly(logEvent(Level.ERROR));
     }
 

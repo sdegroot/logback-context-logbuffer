@@ -120,9 +120,20 @@ public class BufferedContextualAppenderIntegrationTest {
         }
 
         @Override
-        public void setBufferSize(Integer size) {
+        public void setBufferSize(String size) {
 
         }
+
+        @Override
+        public void setLogMessagesAfterFlush(String enabled) {
+
+        }
+
+        @Override
+        public void setBufferEnabled(String enabled) {
+
+        }
+
     }
 
 }

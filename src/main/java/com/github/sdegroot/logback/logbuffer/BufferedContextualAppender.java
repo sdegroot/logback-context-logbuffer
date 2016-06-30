@@ -49,7 +49,7 @@ public class BufferedContextualAppender {
      */
     @Getter
     @Setter
-    private boolean logMessageAfterFlush = false;
+    private boolean logMessagesAfterFlush = false;
 
     /**
      * This variable holds the count of messages that still need to be flushed directly.
@@ -82,7 +82,7 @@ public class BufferedContextualAppender {
         this.actualAppender = actualAppender;
         this.bufferSize = bufferSize;
 
-        buffer = new CircularFifoQueue<ILoggingEvent>(bufferSize);
+        buffer = new CircularFifoQueue<>(bufferSize);
     }
 
     /**
@@ -123,7 +123,7 @@ public class BufferedContextualAppender {
      * This method is called by the appenders when they're stopped.
      * When this method is called we must assume that our actualAppender is going to stop, and therefore, so must we.
      * <p>
-     * For now it will only flush the buffer.
+     * For now it will only clear the buffer.
      */
     public void cleanBuffer() {
         buffer.clear();
@@ -140,9 +140,10 @@ public class BufferedContextualAppender {
             this.actualAppender.appendDirectly((ILoggingEvent) e);
         }
 
-        if (logMessageAfterFlush) {
-            // ensure that the next DEFAULT_BUFFER_SIZE messages are logged directly without buffering.
-            messagesToFlushDirectly = DEFAULT_BUFFER_SIZE;
+        if (logMessagesAfterFlush) {
+            // ensure that the next {bufferSize} messages are logged directly without buffering.
+            // it must be +1 because of the lower than 0 check in the append method
+            messagesToFlushDirectly = bufferSize + 1;
         }
     }
 

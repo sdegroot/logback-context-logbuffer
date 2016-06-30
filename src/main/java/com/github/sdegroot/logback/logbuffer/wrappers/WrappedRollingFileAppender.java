@@ -26,13 +26,15 @@ public class WrappedRollingFileAppender extends RollingFileAppender<ILoggingEven
     @Getter
     private Level _flushBufferFrom;
     @Setter
-    private Integer bufferSize = BufferedContextualAppender.DEFAULT_BUFFER_SIZE;
-
-    private Boolean bufferEnabled = Boolean.TRUE;
+    private Integer _bufferSize = BufferedContextualAppender.DEFAULT_BUFFER_SIZE;
+    @Getter
+    private Boolean _logMessagesAfterFlush = Boolean.TRUE;
+    @Getter
+    private Boolean _bufferEnabled = Boolean.TRUE;
 
     @Override
     public void doAppend(ILoggingEvent eventObject) {
-        if (Boolean.TRUE.equals(bufferEnabled)) {
+        if (Boolean.TRUE.equals(_bufferEnabled)) {
             bufferedContextualAppender.doAppend(eventObject);
         } else {
             appendDirectly(eventObject);
@@ -46,10 +48,11 @@ public class WrappedRollingFileAppender extends RollingFileAppender<ILoggingEven
 
     @Override
     public void start() {
-        bufferedContextualAppender = new BufferedContextualAppender(this, bufferSize);
+        bufferedContextualAppender = new BufferedContextualAppender(this, _bufferSize);
         bufferedContextualAppender.setBufferFrom(_bufferFrom);
         bufferedContextualAppender.setBufferUntil(_bufferUntil);
         bufferedContextualAppender.setFlushBufferFrom(_flushBufferFrom);
+        bufferedContextualAppender.setLogMessagesAfterFlush(_logMessagesAfterFlush);
         super.start();
     }
 
@@ -74,8 +77,18 @@ public class WrappedRollingFileAppender extends RollingFileAppender<ILoggingEven
         _flushBufferFrom = Level.toLevel(level);
     }
 
+    @Override
+    public void setLogMessagesAfterFlush(String enabled) {
+        _logMessagesAfterFlush = Boolean.parseBoolean(enabled);
+    }
+
+    @Override
+    public void setBufferSize(String size) {
+        _bufferSize = Integer.parseInt(size);
+    }
+
     public void setBufferEnabled(String enabled) {
-        this.bufferEnabled = Boolean.parseBoolean(enabled);
+        this._bufferEnabled = Boolean.parseBoolean(enabled);
     }
 
 }

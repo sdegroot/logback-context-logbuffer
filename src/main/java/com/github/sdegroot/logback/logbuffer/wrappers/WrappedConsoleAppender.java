@@ -6,7 +6,6 @@ import ch.qos.logback.core.ConsoleAppender;
 import com.github.sdegroot.logback.logbuffer.BufferedAppenderWrapper;
 import com.github.sdegroot.logback.logbuffer.BufferedContextualAppender;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * This class is a simple wrapper around the ConsoleAppender.
@@ -25,14 +24,19 @@ public class WrappedConsoleAppender extends ConsoleAppender<ILoggingEvent> imple
     private Level _bufferUntil;
     @Getter
     private Level _flushBufferFrom;
-    @Setter
-    private Integer bufferSize = BufferedContextualAppender.DEFAULT_BUFFER_SIZE;
 
-    private Boolean bufferEnabled = Boolean.TRUE;
+    @Getter
+    private Integer _bufferSize = BufferedContextualAppender.DEFAULT_BUFFER_SIZE;
+
+    @Getter
+    private Boolean _bufferEnabled = Boolean.TRUE;
+
+    @Getter
+    private Boolean _logMessagesAfterFlush = Boolean.TRUE;
 
     @Override
     public void doAppend(ILoggingEvent eventObject) {
-        if (Boolean.TRUE.equals(bufferEnabled)) {
+        if (Boolean.TRUE.equals(_bufferEnabled)) {
             bufferedContextualAppender.doAppend(eventObject);
         } else {
             appendDirectly(eventObject);
@@ -46,10 +50,11 @@ public class WrappedConsoleAppender extends ConsoleAppender<ILoggingEvent> imple
 
     @Override
     public void start() {
-        bufferedContextualAppender = new BufferedContextualAppender(this, bufferSize);
+        bufferedContextualAppender = new BufferedContextualAppender(this, _bufferSize);
         bufferedContextualAppender.setBufferFrom(_bufferFrom);
         bufferedContextualAppender.setBufferUntil(_bufferUntil);
         bufferedContextualAppender.setFlushBufferFrom(_flushBufferFrom);
+        bufferedContextualAppender.setLogMessagesAfterFlush(_logMessagesAfterFlush);
         super.start();
     }
 
@@ -74,8 +79,19 @@ public class WrappedConsoleAppender extends ConsoleAppender<ILoggingEvent> imple
         _flushBufferFrom = Level.toLevel(level);
     }
 
+    @Override
+    public void setBufferSize(String size) {
+        _bufferSize = Integer.parseInt(size);
+    }
+
+    @Override
     public void setBufferEnabled(String enabled) {
-        this.bufferEnabled = Boolean.parseBoolean(enabled);
+        this._bufferEnabled = Boolean.parseBoolean(enabled);
+    }
+
+    @Override
+    public void setLogMessagesAfterFlush(String enabled) {
+        this._logMessagesAfterFlush = Boolean.parseBoolean(enabled);
     }
 
 }
