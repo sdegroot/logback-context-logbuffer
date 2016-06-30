@@ -10,3 +10,7 @@ Logback plugin that allows to buffer logs messages until the loglevel of a log m
 2. Publish to Maven Central 
 3. TravisCI
 4. Documentation / description (readme)
+
+## References
+
+- https://issues.sonatype.org/browse/OSSRH-23410
