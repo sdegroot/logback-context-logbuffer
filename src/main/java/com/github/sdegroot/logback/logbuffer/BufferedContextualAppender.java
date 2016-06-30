@@ -14,7 +14,7 @@ import org.apache.commons.collections4.queue.CircularFifoQueue;
  * Please make sure that you never log something in this class using regular loggers!
  * This will cause a stackoverflow since it will most likely be a recursive method.
  * <p>
- *
+ * <p>
  * TODO: improve performance around thread-safety
  *
  * @see @{link WrappedConsoleAppender} for an example on how to wrap another appender.

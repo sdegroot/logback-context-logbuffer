@@ -13,111 +13,111 @@ import static org.mockito.Mockito.verify;
 
 public class BufferedContextualAppenderTest {
 
-	private BufferedContextualAppender bufferedContextualAppender;
-	private BufferedAppenderWrapper stubAppender;
+    private BufferedContextualAppender bufferedContextualAppender;
+    private BufferedAppenderWrapper stubAppender;
 
-	@Before
-	public void setUp() {
-		stubAppender = mock(BufferedAppenderWrapper.class);
-		bufferedContextualAppender = new BufferedContextualAppender(stubAppender, 5);
-	}
+    @Before
+    public void setUp() {
+        stubAppender = mock(BufferedAppenderWrapper.class);
+        bufferedContextualAppender = new BufferedContextualAppender(stubAppender, 5);
+    }
 
-	@After
-	public void cleanBuffer() {
-		bufferedContextualAppender.cleanBuffer();
-	}
+    @After
+    public void cleanBuffer() {
+        bufferedContextualAppender.cleanBuffer();
+    }
 
-	@Test
-	public void shouldNotLogDirectlyButBuffer() {
-		bufferedContextualAppender.setBufferFrom(Level.TRACE);
-		bufferedContextualAppender.setBufferUntil(Level.WARN);
-		bufferedContextualAppender.setFlushBufferFrom(Level.ERROR);
+    @Test
+    public void shouldNotLogDirectlyButBuffer() {
+        bufferedContextualAppender.setBufferFrom(Level.TRACE);
+        bufferedContextualAppender.setBufferUntil(Level.WARN);
+        bufferedContextualAppender.setFlushBufferFrom(Level.ERROR);
 
-		final ILoggingEvent iLoggingEvent = logEvent(Level.DEBUG);
-		bufferedContextualAppender.doAppend(iLoggingEvent);
+        final ILoggingEvent iLoggingEvent = logEvent(Level.DEBUG);
+        bufferedContextualAppender.doAppend(iLoggingEvent);
 
-		verify(stubAppender, times(0)).appendDirectly(iLoggingEvent);
-	}
+        verify(stubAppender, times(0)).appendDirectly(iLoggingEvent);
+    }
 
-	@Test
-	public void shouldLogDireclty() {
-		bufferedContextualAppender.setBufferFrom(Level.TRACE);
-		bufferedContextualAppender.setBufferUntil(Level.DEBUG);
-		bufferedContextualAppender.setFlushBufferFrom(Level.ERROR);
+    @Test
+    public void shouldLogDireclty() {
+        bufferedContextualAppender.setBufferFrom(Level.TRACE);
+        bufferedContextualAppender.setBufferUntil(Level.DEBUG);
+        bufferedContextualAppender.setFlushBufferFrom(Level.ERROR);
 
-		final ILoggingEvent iLoggingEvent = logEvent(Level.INFO);
-		bufferedContextualAppender.doAppend(iLoggingEvent);
+        final ILoggingEvent iLoggingEvent = logEvent(Level.INFO);
+        bufferedContextualAppender.doAppend(iLoggingEvent);
 
-		verify(stubAppender, times(1)).appendDirectly(iLoggingEvent);
-	}
+        verify(stubAppender, times(1)).appendDirectly(iLoggingEvent);
+    }
 
-	@Test
-	public void shouldFlushBuffer() {
-		bufferedContextualAppender.setBufferFrom(Level.TRACE);
-		bufferedContextualAppender.setBufferUntil(Level.INFO);
-		bufferedContextualAppender.setFlushBufferFrom(Level.WARN);
-
-
-		final ILoggingEvent iLoggingEventInfo = logEvent(Level.INFO);
-		bufferedContextualAppender.doAppend(iLoggingEventInfo);
-
-		verify(stubAppender, times(0)).appendDirectly(iLoggingEventInfo);
-
-		final ILoggingEvent iLoggingEventWarn = logEvent(Level.WARN);
-		bufferedContextualAppender.doAppend(iLoggingEventWarn);
-
-		verify(stubAppender, times(1)).appendDirectly(iLoggingEventInfo);
-		verify(stubAppender, times(1)).appendDirectly(iLoggingEventWarn);
-	}
-
-	@Test
-	public void shouldLogLastItemsInBuffer() {
-		bufferedContextualAppender.setBufferFrom(Level.DEBUG);
-		bufferedContextualAppender.setBufferUntil(Level.INFO);
-		bufferedContextualAppender.setFlushBufferFrom(Level.ERROR);
+    @Test
+    public void shouldFlushBuffer() {
+        bufferedContextualAppender.setBufferFrom(Level.TRACE);
+        bufferedContextualAppender.setBufferUntil(Level.INFO);
+        bufferedContextualAppender.setFlushBufferFrom(Level.WARN);
 
 
-		// log six times because buffer is 5 items large
-		bufferedContextualAppender.doAppend(logEvent(Level.TRACE));
-		bufferedContextualAppender.doAppend(logEvent(Level.INFO));
-		bufferedContextualAppender.doAppend(logEvent(Level.INFO));
-		bufferedContextualAppender.doAppend(logEvent(Level.INFO));
-		bufferedContextualAppender.doAppend(logEvent(Level.INFO));
-		bufferedContextualAppender.doAppend(logEvent(Level.INFO));
-		bufferedContextualAppender.doAppend(logEvent(Level.INFO));
+        final ILoggingEvent iLoggingEventInfo = logEvent(Level.INFO);
+        bufferedContextualAppender.doAppend(iLoggingEventInfo);
 
-		// trigger buffer flush
-		bufferedContextualAppender.doAppend(logEvent(Level.ERROR));
+        verify(stubAppender, times(0)).appendDirectly(iLoggingEventInfo);
 
-		verify(stubAppender, times(0)).appendDirectly(logEvent(Level.TRACE));
-		verify(stubAppender, times(5)).appendDirectly(logEvent(Level.INFO));
-		verify(stubAppender, times(1)).appendDirectly(logEvent(Level.ERROR));
-	}
+        final ILoggingEvent iLoggingEventWarn = logEvent(Level.WARN);
+        bufferedContextualAppender.doAppend(iLoggingEventWarn);
 
-	@Test
-	public void shouldLogEventsDirectlyIfBelowBufferFrom() {
-		bufferedContextualAppender.setBufferFrom(Level.DEBUG);
-		bufferedContextualAppender.setBufferUntil(Level.INFO);
-		bufferedContextualAppender.setFlushBufferFrom(Level.WARN);
-		bufferedContextualAppender.setDropBelowBufferFrom(false);
+        verify(stubAppender, times(1)).appendDirectly(iLoggingEventInfo);
+        verify(stubAppender, times(1)).appendDirectly(iLoggingEventWarn);
+    }
+
+    @Test
+    public void shouldLogLastItemsInBuffer() {
+        bufferedContextualAppender.setBufferFrom(Level.DEBUG);
+        bufferedContextualAppender.setBufferUntil(Level.INFO);
+        bufferedContextualAppender.setFlushBufferFrom(Level.ERROR);
 
 
-		final ILoggingEvent iLoggingEventInfo = logEvent(Level.TRACE);
-		bufferedContextualAppender.doAppend(iLoggingEventInfo);
+        // log six times because buffer is 5 items large
+        bufferedContextualAppender.doAppend(logEvent(Level.TRACE));
+        bufferedContextualAppender.doAppend(logEvent(Level.INFO));
+        bufferedContextualAppender.doAppend(logEvent(Level.INFO));
+        bufferedContextualAppender.doAppend(logEvent(Level.INFO));
+        bufferedContextualAppender.doAppend(logEvent(Level.INFO));
+        bufferedContextualAppender.doAppend(logEvent(Level.INFO));
+        bufferedContextualAppender.doAppend(logEvent(Level.INFO));
 
-		verify(stubAppender, times(1)).appendDirectly(iLoggingEventInfo);
-	}
+        // trigger buffer flush
+        bufferedContextualAppender.doAppend(logEvent(Level.ERROR));
 
-	public ILoggingEvent logEvent(Level level) {
-		final LoggingEvent loggingEvent = new LoggingEvent() {
-			@Override
-			public boolean equals(Object obj) {
-				return ((ILoggingEvent) obj).getLevel().equals(this.getLevel());
-			}
-		};
-		loggingEvent.setLevel(level);
-		return loggingEvent;
-	}
+        verify(stubAppender, times(0)).appendDirectly(logEvent(Level.TRACE));
+        verify(stubAppender, times(5)).appendDirectly(logEvent(Level.INFO));
+        verify(stubAppender, times(1)).appendDirectly(logEvent(Level.ERROR));
+    }
+
+    @Test
+    public void shouldLogEventsDirectlyIfBelowBufferFrom() {
+        bufferedContextualAppender.setBufferFrom(Level.DEBUG);
+        bufferedContextualAppender.setBufferUntil(Level.INFO);
+        bufferedContextualAppender.setFlushBufferFrom(Level.WARN);
+        bufferedContextualAppender.setDropBelowBufferFrom(false);
+
+
+        final ILoggingEvent iLoggingEventInfo = logEvent(Level.TRACE);
+        bufferedContextualAppender.doAppend(iLoggingEventInfo);
+
+        verify(stubAppender, times(1)).appendDirectly(iLoggingEventInfo);
+    }
+
+    public ILoggingEvent logEvent(Level level) {
+        final LoggingEvent loggingEvent = new LoggingEvent() {
+            @Override
+            public boolean equals(Object obj) {
+                return ((ILoggingEvent) obj).getLevel().equals(this.getLevel());
+            }
+        };
+        loggingEvent.setLevel(level);
+        return loggingEvent;
+    }
 
 
 }
