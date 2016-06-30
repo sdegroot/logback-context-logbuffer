@@ -8,8 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.stub;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class BufferedContextualAppenderTest {
 
@@ -24,6 +26,7 @@ public class BufferedContextualAppenderTest {
 
     @After
     public void cleanBuffer() {
+        verifyNoMoreInteractions(stubAppender);
         bufferedContextualAppender.cleanBuffer();
     }
 
@@ -106,6 +109,22 @@ public class BufferedContextualAppenderTest {
         bufferedContextualAppender.doAppend(iLoggingEventInfo);
 
         verify(stubAppender, times(1)).appendDirectly(iLoggingEventInfo);
+    }
+
+    @Test
+    public void shouldNotLogMessagesAfterFlushing() {
+        bufferedContextualAppender.setBufferFrom(Level.DEBUG);
+        bufferedContextualAppender.setBufferUntil(Level.INFO);
+        bufferedContextualAppender.setFlushBufferFrom(Level.WARN);
+        bufferedContextualAppender.setDropBelowBufferFrom(true);
+
+
+        bufferedContextualAppender.doAppend(logEvent(Level.DEBUG));
+        bufferedContextualAppender.doAppend(logEvent(Level.ERROR));
+        bufferedContextualAppender.doAppend(logEvent(Level.DEBUG));
+
+        verify(stubAppender, times(1)).appendDirectly(logEvent(Level.DEBUG));
+        verify(stubAppender, times(1)).appendDirectly(logEvent(Level.ERROR));
     }
 
     public ILoggingEvent logEvent(Level level) {
