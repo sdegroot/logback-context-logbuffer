@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.stub;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -117,6 +116,7 @@ public class BufferedContextualAppenderTest {
         bufferedContextualAppender.setBufferUntil(Level.INFO);
         bufferedContextualAppender.setFlushBufferFrom(Level.WARN);
         bufferedContextualAppender.setDropBelowBufferFrom(true);
+        bufferedContextualAppender.setLogMessageAfterFlush(false);
 
 
         bufferedContextualAppender.doAppend(logEvent(Level.DEBUG));
@@ -124,6 +124,43 @@ public class BufferedContextualAppenderTest {
         bufferedContextualAppender.doAppend(logEvent(Level.DEBUG));
 
         verify(stubAppender, times(1)).appendDirectly(logEvent(Level.DEBUG));
+        verify(stubAppender, times(1)).appendDirectly(logEvent(Level.ERROR));
+    }
+
+    @Test
+    public void shouldDirectlyLogMessagesFollowedByABufferFlush() {
+        bufferedContextualAppender.setBufferFrom(Level.DEBUG);
+        bufferedContextualAppender.setBufferUntil(Level.INFO);
+        bufferedContextualAppender.setFlushBufferFrom(Level.WARN);
+        bufferedContextualAppender.setDropBelowBufferFrom(true);
+        bufferedContextualAppender.setLogMessageAfterFlush(true);
+
+
+        bufferedContextualAppender.doAppend(logEvent(Level.DEBUG));
+        bufferedContextualAppender.doAppend(logEvent(Level.ERROR));
+        bufferedContextualAppender.doAppend(logEvent(Level.DEBUG));
+
+        verify(stubAppender, times(2)).appendDirectly(logEvent(Level.DEBUG));
+        verify(stubAppender, times(1)).appendDirectly(logEvent(Level.ERROR));
+    }
+
+    @Test
+    public void shouldBufferAgainAfter50directlySendMessagse() {
+        bufferedContextualAppender.setBufferFrom(Level.DEBUG);
+        bufferedContextualAppender.setBufferUntil(Level.INFO);
+        bufferedContextualAppender.setFlushBufferFrom(Level.WARN);
+        bufferedContextualAppender.setDropBelowBufferFrom(true);
+        bufferedContextualAppender.setLogMessageAfterFlush(true);
+
+
+        bufferedContextualAppender.doAppend(logEvent(Level.DEBUG));
+        bufferedContextualAppender.doAppend(logEvent(Level.ERROR));
+
+        for (int i = 0; i < 54; i++) {
+            bufferedContextualAppender.doAppend(logEvent(Level.DEBUG));
+        }
+
+        verify(stubAppender, times(51)).appendDirectly(logEvent(Level.DEBUG));
         verify(stubAppender, times(1)).appendDirectly(logEvent(Level.ERROR));
     }
 

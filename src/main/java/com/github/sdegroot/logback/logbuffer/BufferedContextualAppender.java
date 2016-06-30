@@ -43,6 +43,21 @@ public class BufferedContextualAppender {
     @Getter
     private int bufferSize;
 
+    /**
+     * Enable this switch if you want log the messages that are sent directly after a buffer flush.
+     * The logic behind this is that usually it's not only useful to know the log messages preceeding an error but also the ones directly after it.
+     */
+    @Getter
+    @Setter
+    private boolean logMessageAfterFlush = false;
+
+    /**
+     * This variable holds the count of messages that still need to be flushed directly.
+     * If a message is logged and this number is higher than zero, then this message will not be buffered but logged directly instead.
+     * The logic behind this is that usually it's not only useful to know the log messages preceeding an error but also the ones directly after it.
+     */
+    private int messagesToFlushDirectly = 0;
+
     private final CircularFifoQueue<ILoggingEvent> buffer;
 
     private final BufferedAppenderWrapper actualAppender;
@@ -80,19 +95,24 @@ public class BufferedContextualAppender {
         final Level level = event.getLevel();
 
         synchronized (buffer) {
-            // if the level of the event is between
-            if (level.isGreaterOrEqual(bufferFrom) && bufferUntil.isGreaterOrEqual(level)) {
-                buffer.add(event);
-                // don't log it
-                return;
-            }
+            if (messagesToFlushDirectly > 0) {
+                messagesToFlushDirectly--;
+            } else {
 
-            if (level.isGreaterOrEqual(flushBufferFrom)) {
-                // flush buffer
-                flushBuffer();
-            } else if (dropBelowBufferFrom && bufferFrom.isGreaterOrEqual(level)) {
-                // drop this event because its below bufferFrom
-                return;
+                // if the level of the event is between
+                if (level.isGreaterOrEqual(bufferFrom) && bufferUntil.isGreaterOrEqual(level)) {
+                    buffer.add(event);
+                    // don't log it
+                    return;
+                }
+
+                if (level.isGreaterOrEqual(flushBufferFrom)) {
+                    // flush buffer
+                    flushBuffer();
+                } else if (dropBelowBufferFrom && bufferFrom.isGreaterOrEqual(level)) {
+                    // drop this event because its below bufferFrom
+                    return;
+                }
             }
         }
 
@@ -118,6 +138,11 @@ public class BufferedContextualAppender {
 
         for (Object e : copy) {
             this.actualAppender.appendDirectly((ILoggingEvent) e);
+        }
+
+        if (logMessageAfterFlush) {
+            // ensure that the next DEFAULT_BUFFER_SIZE messages are logged directly without buffering.
+            messagesToFlushDirectly = DEFAULT_BUFFER_SIZE;
         }
     }
 
