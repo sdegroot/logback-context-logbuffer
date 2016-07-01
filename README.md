@@ -6,9 +6,9 @@ Logback plugin that allows to buffer logs messages until the loglevel of a log m
 
 ## TODO
 
-1. Examples
-2. Publish to Maven Central 
-3. TravisCI
+1. Improve Examples
+2. Make a release to Maven Central
+3. Coverage
 4. Documentation / description (readme)
 
 ## References
