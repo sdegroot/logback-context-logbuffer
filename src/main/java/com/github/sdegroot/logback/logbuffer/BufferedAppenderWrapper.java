@@ -39,4 +39,6 @@ public interface BufferedAppenderWrapper {
     void setLogMessagesAfterFlush(String enabled);
 
     void setBufferEnabled(String enabled);
+
+    BufferedContextualAppender getBufferedContextualAppender();
 }

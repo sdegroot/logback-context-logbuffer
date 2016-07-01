@@ -134,6 +134,11 @@ public class BufferedContextualAppenderIntegrationTest {
 
         }
 
+        @Override
+        public BufferedContextualAppender getBufferedContextualAppender() {
+            return null;
+        }
+
     }
 
 }

@@ -12,6 +12,7 @@ import lombok.Setter;
  * This class is a simple wrapper around the ConsoleAppender.
  */
 public class WrappedRollingFileAppender extends RollingFileAppender<ILoggingEvent> implements BufferedAppenderWrapper {
+    @Getter
     private BufferedContextualAppender bufferedContextualAppender;
 
 	/*

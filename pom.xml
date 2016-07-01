@@ -185,6 +185,13 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.7.6.201602180812</version>
+                <configuration>
+                    <excludes>
+                        <!-- exlude the appenders as they can not be properly tested anyway -->
+                        <!-- also, these wrappers don't do anything, really. -->
+                        <exclude>**/*Wrapped*Appender.class</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
