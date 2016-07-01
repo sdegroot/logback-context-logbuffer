@@ -17,8 +17,23 @@
         </encoder>
     </appender>
 
-    <root level="${logging.level:-INFO}">
+   <appender name="JSON_LOG" class="com.github.sdegroot.logback.logbuffer.wrappers.WrappedRollingFileAppender">
+        <file>${LOG_FILE}/file>
+	<encoder>
+            <pattern>%X{id} %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-6level[%logger{0}]: %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_FILE}.%i</fileNamePattern>
+        </rollingPolicy>
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>10MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <root level="${logging.level:-DEBUG}">
         <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="JSON_LOG"/>
     </root>
 </configuration>
 
