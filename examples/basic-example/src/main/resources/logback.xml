@@ -1,25 +1,28 @@
 <configuration>
-    <property name="CONSOLE_LOG_PATTERN"
-              value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) [%15.15t] %clr([%40.40logger{39}]){cyan}: %replace(%replace(%msg){'\r', '\\r'}){'\n', '\\n'}%n"/>
-    <property name="FILE_LOG_PATTERN"
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } --- [%t] %-40.40logger{39} : %replace(%replace(%msg){'\r', '\\r'}){'\n', '\\n'}%n%wex"/>
-
     <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}logfile.log}"/>
 
-     <appender name="CONSOLE" class="com.github.sdegroot.logback.logbuffer.wrappers.WrappedConsoleAppender">
-        <bufferEnabled>${ENABLE_LOG_BUFFERING:-false}</bufferEnabled>
+    <appender name="CONSOLE" class="com.github.sdegroot.logback.logbuffer.wrappers.WrappedConsoleAppender">
+        <bufferEnabled>${ENABLE_LOG_BUFFERING:-true}</bufferEnabled>
         <bufferFrom>TRACE</bufferFrom>
         <bufferUntil>DEBUG</bufferUntil>
+        <bufferSize>1</bufferSize>
         <flushBufferFrom>WARN</flushBufferFrom>
         <encoder>
             <charset>utf8</charset>
-            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <pattern>%X{id} %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-6level[%logger{0}]: %msg%n</pattern>
         </encoder>
     </appender>
 
-   <appender name="JSON_LOG" class="com.github.sdegroot.logback.logbuffer.wrappers.WrappedRollingFileAppender">
-        <file>${LOG_FILE}/file>
-	<encoder>
+    <appender name="JSON_LOG" class="com.github.sdegroot.logback.logbuffer.wrappers.WrappedRollingFileAppender">
+        <file>${LOG_FILE}</file>
+
+        <bufferEnabled>${ENABLE_LOG_BUFFERING:-true}</bufferEnabled>
+        <bufferFrom>TRACE</bufferFrom>
+        <bufferSize>1</bufferSize>
+        <bufferUntil>DEBUG</bufferUntil>
+        <flushBufferFrom>WARN</flushBufferFrom>
+
+        <encoder>
             <pattern>%X{id} %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-6level[%logger{0}]: %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
