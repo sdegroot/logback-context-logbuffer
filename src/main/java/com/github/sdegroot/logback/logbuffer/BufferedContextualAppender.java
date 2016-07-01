@@ -82,7 +82,7 @@ public class BufferedContextualAppender {
         this.actualAppender = actualAppender;
         this.bufferSize = bufferSize;
 
-        buffer = new CircularFifoQueue<>(bufferSize);
+        buffer = new CircularFifoQueue<ILoggingEvent>(bufferSize);
     }
 
     /**

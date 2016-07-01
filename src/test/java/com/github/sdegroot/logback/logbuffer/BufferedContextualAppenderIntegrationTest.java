@@ -82,7 +82,7 @@ public class BufferedContextualAppenderIntegrationTest {
     public class StubAppender extends UnsynchronizedAppenderBase<ILoggingEvent> implements BufferedAppenderWrapper {
         public BufferedContextualAppender bufferedContextualAppender = new BufferedContextualAppender(this);
 
-        public List<ILoggingEvent> loggedEvents = new ArrayList<>();
+        public List<ILoggingEvent> loggedEvents = new ArrayList<ILoggingEvent>();
 
         @Override
         public void doAppend(ILoggingEvent eventObject) {
