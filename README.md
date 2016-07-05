@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/sdegroot/logback-context-logbuffer.svg?branch=master)](https://travis-ci.org/sdegroot/logback-context-logbuffer)
 [![Coverage Status](https://coveralls.io/repos/github/sdegroot/logback-context-logbuffer/badge.svg?branch=master)](https://coveralls.io/github/sdegroot/logback-context-logbuffer?branch=master)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.sdegroot/logback-context-logbuffer/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.sdegroot/logback-context-buffer)
 
 # logback-context-logbuffer
 
