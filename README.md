@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/sdegroot/logback-context-logbuffer.svg?branch=master)](https://travis-ci.org/sdegroot/logback-context-logbuffer)
 [![Coverage Status](https://coveralls.io/repos/github/sdegroot/logback-context-logbuffer/badge.svg?branch=master)](https://coveralls.io/github/sdegroot/logback-context-logbuffer?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.sdegroot/logback-context-logbuffer/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.sdegroot/logback-context-buffer)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.sdegroot/logback-context-logbuffer/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.sdegroot/logback-context-logbuffer)
 
 # logback-context-logbuffer
 
@@ -32,10 +32,6 @@ Other appenders are not yet supported. Please feel free to create a pull request
 - You have set the log level to DEBUG in logback
 
 For a working example see the *examples* directory.
-
-## TODO
-
-2. Make a release to Maven Central
 
 ## References
 
